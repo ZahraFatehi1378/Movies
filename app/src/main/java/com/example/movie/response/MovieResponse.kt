@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName
 class MovieResponse(
     @SerializedName("results")
     @Expose
-    val movies: MovieModel
+    val movie: MovieModel
 )

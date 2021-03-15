@@ -1,6 +1,7 @@
 package com.example.movie.request.util
 
 import com.example.movie.request.model.MovieModel
+import com.example.movie.response.MovieResponse
 import com.example.movie.response.MovieSearchResponse
 import retrofit2.Call
 import retrofit2.Response
@@ -33,5 +34,5 @@ interface MovieApi {
      suspend fun getMovieAccordingToId(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") key: String
-    ): Response<MovieModel>
+    ): Response<MovieResponse>
 }
