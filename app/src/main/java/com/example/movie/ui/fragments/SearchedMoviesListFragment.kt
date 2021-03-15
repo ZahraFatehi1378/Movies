@@ -26,7 +26,8 @@ class SearchedMoviesListFragment : BaseFragment() {
     }
 
     override fun setMovies() {
-        setSearchedMovies("1", "flash")
+        ResultsLists.searchedMoviesPageNumber++
+        setSearchedMovies(ResultsLists.searchedMoviesPageNumber.toString(), "flash")
     }
 
 
@@ -34,7 +35,7 @@ class SearchedMoviesListFragment : BaseFragment() {
         //todo ask why
         //  moviesAdaptor?.notifyDataSetChanged()
 
-        moviesAdaptor = MoviesAdaptor(ResultsLists.popularMovies)
+        moviesAdaptor = MoviesAdaptor(ResultsLists.searchedMovies)
         recyclerView?.adapter = moviesAdaptor
     }
 

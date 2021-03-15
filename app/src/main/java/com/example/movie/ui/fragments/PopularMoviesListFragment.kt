@@ -12,7 +12,7 @@ class PopularMoviesListFragment : BaseFragment() {
         movieListViewModel.getPopularMovies(Constant.API_KEY, page)
         movieListViewModel.myResponse.observe(viewLifecycleOwner, Observer { response ->
             if (response.code() == 200) {
-                if (page == "1") ResultsLists.popularMovies = response.body()?.movies!!
+                if (page == ResultsLists.popularPageNumber.toString()) ResultsLists.popularMovies = response.body()?.movies!!
                 else ResultsLists.popularMovies.toMutableList().addAll(response.body()?.movies!!)
                 setMoviesInRecycler()
             } else println(response.errorBody().toString())
@@ -30,7 +30,8 @@ class PopularMoviesListFragment : BaseFragment() {
 
 
     override fun setMovies() {
-        setPopularMovies("1")
+        ResultsLists.popularPageNumber++
+        setPopularMovies(ResultsLists.popularPageNumber.toString())
     }
 
 

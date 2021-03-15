@@ -43,10 +43,21 @@ open class BaseFragment : Fragment() {
 //        moviesAdaptor = MoviesAdaptor(ResultsLists.popularMovies)
 //        recyclerView?.adapter  =  moviesAdaptor
         recyclerView?.layoutManager = LinearLayoutManager(context)
+        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1))
+                setMovies()
+            }
+        })
+
         setMovies()
     }
 
+
     open fun setMovies() {}
+
     open fun setMoviesInRecycler() {}
+
 
 }
