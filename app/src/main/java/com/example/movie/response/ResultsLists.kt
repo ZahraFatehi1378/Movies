@@ -5,6 +5,7 @@ import com.example.movie.request.model.MovieModel
 object ResultsLists {
     var searchedMovies: List<MovieModel> = emptyList()
     var popularMovies: List<MovieModel> = emptyList()
+    var recyclerList:List<MovieModel> = emptyList()
 
     var popularPageNumber = 0
     var searchedMoviesPageNumber = 0

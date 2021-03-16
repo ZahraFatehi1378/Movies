@@ -1,4 +1,4 @@
-package com.example.movie.ui.fragments
+package com.example.movie.ui.fragments.list_frags
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.movie.R
 
-class CategoriesFragment : Fragment() {
+class CategoriesListFragment : Fragment() {
 
 
     override fun onCreateView(
@@ -15,7 +15,8 @@ class CategoriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_categories, container, false)
+        println("oh")
+        return inflater.inflate(R.layout.fragment_base, container, false)
     }
 
 }
