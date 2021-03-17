@@ -25,7 +25,7 @@ class PagerAdaptor(supportFragmentManager:FragmentManager, lifecycle:Lifecycle) 
             0 -> return PopularFragment()
             1 -> return SavedFragment()
             2 -> return CategoriesFragment()
-s        }
+        }
         return PopularMoviesFragment()
     }
 }
