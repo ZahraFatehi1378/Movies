@@ -4,7 +4,7 @@ import com.example.movie.request.util.Constant
 import com.example.movie.response.ResultsLists
 
 
-class PopularMoviesFragment : ListsBaseFragment() {
+class PopularMoviesFragment : BaseFragment() {
 
 
     override fun setMovies() {
@@ -20,6 +20,7 @@ class PopularMoviesFragment : ListsBaseFragment() {
                     recyclerList.addAll(response.body()?.movies!!)
                     //     recyclerList = (response.body()?.movies as MutableList<MovieModel>?)!!
                     moviesAdaptor?.notifyDataSetChanged()
+
                 } else {
                     recyclerList.addAll(response.body()?.movies!!)
                     // moviesAdaptor?.notifyItemRangeChanged( recyclerList.size -21, 20)

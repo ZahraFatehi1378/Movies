@@ -1,12 +1,12 @@
 package com.example.movie.ui.fragments.list_frags
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movie.MainActivity
@@ -16,12 +16,13 @@ import com.example.movie.request.Repository
 import com.example.movie.request.model.MovieModel
 import com.example.movie.request.util.Constant
 import com.example.movie.request.viewmodels.MovieListViewModel
-import com.example.movie.request.viewmodels.ViewModelFactory
+import com.example.movie.request.viewmodels.MovieListViewModelFactory
+import com.example.movie.ui.MovieDetailActivity
 import com.example.movie.ui.adaptor.MoviesAdaptor
 import com.example.movie.ui.interfaces.OnMovieListener
 
 
-open class ListsBaseFragment : Fragment() {
+open class BaseFragment : Fragment() {
 
     protected lateinit var movieListViewModel: MovieListViewModel
     protected var recyclerView: RecyclerView? = null
@@ -42,7 +43,7 @@ open class ListsBaseFragment : Fragment() {
         val mActivity = activity as MainActivity?
         mActivity?.setAboutDataListener(object : OnAboutDataReceivedListener {
             override fun onDataReceived(search: String) {
-                movieListViewModel.getMovies(
+                movieListViewModel.getSearchedMovies(
                     Constant.API_KEY,
                     search,
                     "1"
@@ -68,7 +69,7 @@ open class ListsBaseFragment : Fragment() {
     }
 
     private fun init() {
-        val viewModelFactory = ViewModelFactory(Repository)
+        val viewModelFactory = MovieListViewModelFactory(Repository)
         movieListViewModel =
             ViewModelProvider(this, viewModelFactory).get(MovieListViewModel::class.java)
 
@@ -104,12 +105,18 @@ open class ListsBaseFragment : Fragment() {
 
     fun getSelectedMovie(position: Int) {
         if (recyclerList.isNotEmpty()) {
-            val action =
-                PopularMoviesFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(
-                    recyclerList[position]
-                )
-            Navigation.findNavController(rootView).navigate(action)
+
+            val intent = Intent(activity, MovieDetailActivity::class.java).apply {
+                putExtra("movie_id", recyclerList[position].id)
+            }
+            startActivity(intent)
         }
+//            val action =
+//                PopularMoviesFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(
+//                    recyclerList[position].id
+//                )
+//            Navigation.findNavController(rootView).navigate(action)
+        //       }
 
     }
 }

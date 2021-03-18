@@ -15,7 +15,7 @@ class MovieListViewModel(var repository:Repository) :ViewModel()
 
     val myResponse:MutableLiveData<Response<MovieSearchResponse>> = MutableLiveData()
 
-    fun getMovies(key: String, query: String, page:String){
+    fun getSearchedMovies(key: String, query: String, page:String){
         viewModelScope.launch {
             val response = repository.getSearchedMovies( key , query , page)
             myResponse.value = response

@@ -8,13 +8,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import androidx.viewpager2.widget.ViewPager2
-import com.example.movie.request.model.MovieModel
-import com.example.movie.request.util.Constant
-import com.example.movie.request.viewmodels.MovieDetailModel
-import com.example.movie.response.ResultsLists
+import com.example.movie.request.viewmodels.MovieDetailViewModel
 import com.example.movie.ui.adaptor.PagerAdaptor
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -23,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
 
-    private lateinit var movieDetailModel: MovieDetailModel
+    private lateinit var movieDetailModel: MovieDetailViewModel
 
     lateinit var viewPager: ViewPager2
     lateinit var searchText: EditText

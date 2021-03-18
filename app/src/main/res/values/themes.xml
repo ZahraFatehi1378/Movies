@@ -19,4 +19,13 @@
         <item name="android:windowContentOverlay">@null</item>
 
     </style>
+
+    <style name="Theme.Movie.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Movie.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Movie.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
