@@ -1,10 +1,11 @@
-package com.example.movie.request.model
+package com.example.movie.request.model.movie
 
 
 data class MovieModel(
-    val backdrop_path: String,
     val id: Int,
     val poster_path: String,
     val title: String,
+    val release_date: String,
     val vote_average: Float,
+    val original_language:String
 )

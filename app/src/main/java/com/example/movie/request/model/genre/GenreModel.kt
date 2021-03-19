@@ -1,4 +1,4 @@
-package com.example.movie.request.model
+package com.example.movie.request.model.genre
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

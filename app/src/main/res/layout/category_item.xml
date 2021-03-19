@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+>
+
+    <data>
+
+        <variable
+            name="genreModel"
+            type="com.example.movie.request.model.genre.GenreModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:textColor="@color/text_color"
+            android:text="@{genreModel.name}"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/category_bg_item"
+            android:layout_margin="5dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

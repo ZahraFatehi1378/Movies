@@ -10,22 +10,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movie.MainActivity
-import com.example.movie.OnAboutDataReceivedListener
 import com.example.movie.R
 import com.example.movie.request.Repository
-import com.example.movie.request.model.MovieModel
+import com.example.movie.request.model.movie.MovieModel
 import com.example.movie.request.util.Constant
 import com.example.movie.request.viewmodels.MovieListViewModel
-import com.example.movie.request.viewmodels.MovieListViewModelFactory
+import com.example.movie.request.viewmodels.factories.MovieListViewModelFactory
 import com.example.movie.ui.MovieDetailActivity
 import com.example.movie.ui.adaptor.MoviesAdaptor
-import com.example.movie.ui.interfaces.OnMovieListener
+import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
+import com.example.movie.ui.interfaces.OnRecyclerItemListener
 
 
 open class BaseFragment : Fragment() {
 
     protected lateinit var movieListViewModel: MovieListViewModel
-    protected var recyclerView: RecyclerView? = null
+    private var recyclerView: RecyclerView? = null
     protected var moviesAdaptor: MoviesAdaptor? = null
     protected lateinit var rootView: View
     protected var recyclerList = mutableListOf<MovieModel>()
@@ -35,10 +35,14 @@ open class BaseFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_base, container, false)
+        setRoot(inflater, container)
         recyclerView = rootView.findViewById(R.id.recyclerView)
         init()
+        setSearch()
+        return rootView
+    }
+
+    private fun setSearch() {
 
         val mActivity = activity as MainActivity?
         mActivity?.setAboutDataListener(object : OnAboutDataReceivedListener {
@@ -50,7 +54,6 @@ open class BaseFragment : Fragment() {
                 )
                 movieListViewModel.myResponse.observe(viewLifecycleOwner, { response ->
                     if (response.code() == 200) {
-                        println("yes")
 
                         recyclerList.clear()
                         // if (ResultsLists.searchedMoviesPageNumber.toString() == "1") {
@@ -65,7 +68,10 @@ open class BaseFragment : Fragment() {
             }
 
         })
-        return rootView
+    }
+
+    protected open fun setRoot(inflater: LayoutInflater, container: ViewGroup?) {
+        rootView = inflater.inflate(R.layout.fragment_base, container, false)
     }
 
     private fun init() {
@@ -79,7 +85,7 @@ open class BaseFragment : Fragment() {
     }
 
     private fun addRecyclerView() {
-        moviesAdaptor = MoviesAdaptor(object : OnMovieListener {
+        moviesAdaptor = MoviesAdaptor(object : OnRecyclerItemListener {
             override fun onItemClicked(position: Int) {
                 getSelectedMovie(position)
             }
@@ -111,12 +117,5 @@ open class BaseFragment : Fragment() {
             }
             startActivity(intent)
         }
-//            val action =
-//                PopularMoviesFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(
-//                    recyclerList[position].id
-//                )
-//            Navigation.findNavController(rootView).navigate(action)
-        //       }
-
     }
 }

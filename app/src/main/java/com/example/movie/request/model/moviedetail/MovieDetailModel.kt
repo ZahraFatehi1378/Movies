@@ -1,10 +1,9 @@
-package com.example.movie.request.model
+package com.example.movie.request.model.moviedetail
 
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.example.movie.R
+import com.example.movie.request.model.genre.GenreModel
 
 class MovieDetailModel(
     val backdrop_path: String,

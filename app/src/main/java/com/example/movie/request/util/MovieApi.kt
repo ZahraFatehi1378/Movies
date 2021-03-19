@@ -1,9 +1,8 @@
 package com.example.movie.request.util
 
-import com.example.movie.request.model.GenreModel
-import com.example.movie.request.model.MovieDetailModel
-import com.example.movie.request.model.MovieModel
-import com.example.movie.response.MovieSearchResponse
+import com.example.movie.request.model.moviedetail.MovieDetailModel
+import com.example.movie.request.model.genre.GenreResponse
+import com.example.movie.request.model.movie.MovieSearchResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,34 +10,46 @@ import retrofit2.http.Query
 
 interface MovieApi {
 
-    // https://api.themoviedb.org/3/search/movie?api_key=95c73f18955a62900bc3a92fce1bfd72&query=Jack+Reacher
-
     // populars
     @GET("/3/movie/popular")
     suspend fun getPopularMovies(
-        @Query("api_key") key: String ,
-        @Query("page") page:String
+        @Query("api_key") key: String,
+        @Query("page") page: String
     ): Response<MovieSearchResponse>
 
     //search with name
     @GET("/3/search/movie")
     suspend fun getSearchedMovies(
-        @Query("api_key") key: String ,
+        @Query("api_key") key: String,
         @Query("query") query: String,
-        @Query("page") page:String
+        @Query("page") page: String
     ): Response<MovieSearchResponse>
 
 
     //search with id
     @GET("/3/movie/{movie_id}?")
-     suspend fun getMovieAccordingToId(
+    suspend fun getMovieAccordingToId(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") key: String
     ): Response<MovieDetailModel>
 
-//     @GET()
-//     suspend fun getGenres(
-//         @Query("api_key") key: String
-//     ):Response<GenreModel>
+    //genres
+    @GET("/3/genre/movie/list")
+    suspend fun getGenres(
+        @Query("api_key") key: String
+    ): Response<GenreResponse>
 
+    //credits
+    @GET("/3/movie/{movie_id}?/credits")
+    suspend fun getCredits(
+        @Path("movie_id") movie_id: Int,
+        @Query("api_key") key: String
+    )
+
+    //movies according the genre
+    @GET("/3/discover/movie")
+    suspend fun getMoviesOfTheGenre(
+        @Query("api_key") key: String,
+        @Query("with_genres") genre:Int
+    ):Response<MovieSearchResponse>
 }

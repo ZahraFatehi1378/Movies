@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.movie.request.viewmodels.MovieDetailViewModel
 import com.example.movie.ui.adaptor.PagerAdaptor
+import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
@@ -84,11 +85,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setAboutDataListener(listener:OnAboutDataReceivedListener ) {
+    fun setAboutDataListener(listener: OnAboutDataReceivedListener) {
         this.searchListener = listener;
     }
 }
 
- interface OnAboutDataReceivedListener {
-    fun onDataReceived(search : String);
-}

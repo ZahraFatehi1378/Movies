@@ -55,7 +55,8 @@
                     app:tabPaddingStart="0dp"
                     app:tabSelectedTextColor="@color/white"
                     app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
-                    app:tabTextColor="@color/text_color" />
+                    app:tabTextColor="@color/text_color"
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:layout_width="0dp"

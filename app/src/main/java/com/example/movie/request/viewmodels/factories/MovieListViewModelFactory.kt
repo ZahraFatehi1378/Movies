@@ -1,8 +1,9 @@
-package com.example.movie.request.viewmodels
+package com.example.movie.request.viewmodels.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.movie.request.Repository
+import com.example.movie.request.viewmodels.MovieListViewModel
 
 
 class MovieListViewModelFactory(private val repository: Repository): ViewModelProvider.Factory {

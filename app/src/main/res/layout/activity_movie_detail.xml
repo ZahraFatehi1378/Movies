@@ -8,7 +8,7 @@
 
         <variable
             name="chosenMovie"
-            type="com.example.movie.request.model.MovieDetailModel" />
+            type="com.example.movie.request.model.moviedetail.MovieDetailModel" />
         <variable
             name="genresList"
             type="String" />

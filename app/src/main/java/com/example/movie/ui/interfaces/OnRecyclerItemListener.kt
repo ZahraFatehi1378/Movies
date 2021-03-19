@@ -1,6 +1,6 @@
 package com.example.movie.ui.interfaces
 
-interface OnMovieListener {
+interface OnRecyclerItemListener{
 
     fun onItemClicked(position:Int )
 }

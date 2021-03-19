@@ -1,10 +1,9 @@
-package com.example.movie.response
+package com.example.movie.request.model.movie
 
-import com.example.movie.request.model.MovieModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class MovieSearchResponse(
+data class MovieSearchResponse(
     @SerializedName("total_results")
     @Expose()
     val totalCount: Int,
