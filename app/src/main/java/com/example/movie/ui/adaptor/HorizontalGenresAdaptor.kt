@@ -11,10 +11,10 @@ import com.example.movie.request.model.genre.GenreModel
 import com.example.movie.ui.interfaces.OnHorizontalRecyclerListener
 import com.example.movie.ui.interfaces.OnRecyclerItemListener
 
-class HorizontalGenresAdaptor (
+class HorizontalGenresAdaptor(
     private val listener: OnHorizontalRecyclerListener,
     private var list: MutableList<GenreModel>
-):RecyclerView.Adapter<HorizontalGenresAdaptor.CategoryViewHolder>() {
+) : RecyclerView.Adapter<HorizontalGenresAdaptor.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding: CategoryItemBinding = DataBindingUtil.inflate(
@@ -28,14 +28,16 @@ class HorizontalGenresAdaptor (
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.bindItems(list[position])
     }
+
     override fun getItemCount(): Int {
         return list.size
     }
 
-    inner class CategoryViewHolder(private val binding:CategoryItemBinding ) : RecyclerView.ViewHolder(
-        binding.root
-    ), View.OnClickListener {
-        lateinit var genre :GenreModel
+    inner class CategoryViewHolder(private val binding: CategoryItemBinding) :
+        RecyclerView.ViewHolder(
+            binding.root
+        ), View.OnClickListener {
+        lateinit var genre: GenreModel
 
         fun bindItems(genre: GenreModel) {
             itemView.setOnClickListener(this)
@@ -45,11 +47,14 @@ class HorizontalGenresAdaptor (
         }
 
         override fun onClick(v: View?) {
-            listener.onItemClicked(adapterPosition ,genre.id)
+            for (x in list) {
+                x.selected = false
+            }
+            listener.onItemClicked(adapterPosition, genre.id)
+            genre.selected = true
+
+            notifyDataSetChanged()
         }
 
     }
-
-
-
 }

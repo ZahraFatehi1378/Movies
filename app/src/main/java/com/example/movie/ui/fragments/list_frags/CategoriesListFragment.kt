@@ -28,7 +28,6 @@ class CategoriesListFragment : BaseFragment() {
 
         horizontalGenresAdaptor = HorizontalGenresAdaptor(object : OnHorizontalRecyclerListener {
             override fun onItemClicked(position: Int, genre_id: Int) {
-                println("$genre_id             00000000000000000000")
                 movieListViewModel.getMoviesOfTheGenre(Constant.API_KEY, genre_id)
                 movieListViewModel.myResponse.observe(viewLifecycleOwner, { response ->
                     if (response.code() == 200) {
@@ -42,13 +41,23 @@ class CategoriesListFragment : BaseFragment() {
         }, genresList)
         horizontalRecyclerView = rootView.findViewById(R.id.horizontalRecyclerView)
 
-        horizontalRecyclerView?.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        horizontalRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         horizontalRecyclerView?.adapter = horizontalGenresAdaptor
+
     }
 
     override fun setMovies() {
         setCategorizedMovies()
+
+        movieListViewModel.getMoviesOfTheGenre(Constant.API_KEY,28 )
+        movieListViewModel.myResponse.observe(viewLifecycleOwner, { response ->
+            if (response.code() == 200) {
+                recyclerList.clear()
+                // if (ResultsLists.searchedMoviesPageNumber.toString() == "1") {
+                recyclerList.addAll(response.body()?.movies!!)
+                moviesAdaptor?.notifyDataSetChanged()
+            } else println(response.errorBody().toString())
+        })
     }
 
     private fun setCategorizedMovies() {
@@ -58,6 +67,7 @@ class CategoriesListFragment : BaseFragment() {
         genresViewModel.myResponse.observe(viewLifecycleOwner, { response ->
             if (response.code() == 200) {
                 genresList.addAll((response.body()?.genres as MutableList<GenreModel>?)!!)
+                genresList.get(0).selected = true
                 horizontalGenresAdaptor.notifyDataSetChanged()
             } else println(response.errorBody().toString())
         })
