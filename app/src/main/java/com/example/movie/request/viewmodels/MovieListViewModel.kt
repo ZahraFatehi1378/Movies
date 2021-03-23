@@ -1,37 +1,60 @@
 package com.example.movie.request.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.movie.request.Repository
-import com.example.movie.request.model.movie.MovieSearchResponse
+import com.example.movie.request.model.movie.MovieModel
+import com.example.movie.request.util.Constant
+import com.example.movie.request.viewmodels.paging.MoviesByGenrePagingSource
+import com.example.movie.request.viewmodels.paging.PopularMoviePagingSource
+import com.example.movie.request.viewmodels.paging.SearchedMoviePagingSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import retrofit2.Response
+import java.lang.Exception
 
-class MovieListViewModel(var repository:Repository) :ViewModel()
-{
+class MovieListViewModel(var repository: Repository) : ViewModel() {
 
-    val myResponse:MutableLiveData<Response<MovieSearchResponse>> = MutableLiveData()
+    val myResponse: MutableLiveData<PagingData<MovieModel>> = MutableLiveData()
+    lateinit var moviePagingSource: Flow<PagingData<MovieModel>>
 
-    fun getSearchedMovies(key: String, query: String, page:String){
-        viewModelScope.launch {
-            val response = repository.getSearchedMovies( key , query , page)
-            myResponse.value = response
-        }
+
+    fun setPopularMovies() {
+        moviePagingSource = Pager(PagingConfig(pageSize = 20)) {
+            PopularMoviePagingSource(Constant.API_KEY, repository)
+        }.flow.cachedIn(viewModelScope)
     }
 
-    fun getPopularMovies(key: String, page:String){
-        viewModelScope.launch {
-            val response = repository.getPopularMovies( key , page)
-            println(response.body()?.movies)
-            myResponse.value = response
-        }
+    fun setSearchedMovies(query: String) {
+        moviePagingSource = Pager(PagingConfig(20)) {
+            SearchedMoviePagingSource(Constant.API_KEY, query, repository)
+        }.flow.cachedIn(viewModelScope)
     }
 
-    fun getMoviesOfTheGenre(key: String , genre_id:Int){
+
+    fun setMoviesByGenre(genre_id: Int) {
+        moviePagingSource = Pager(PagingConfig(20)) {
+            MoviesByGenrePagingSource(Constant.API_KEY, genre_id, repository)
+        }.flow.cachedIn(viewModelScope)
+    }
+
+
+    fun getMovies() {
         viewModelScope.launch {
-            val response = repository.getMoviesOfTheGenre( key , genre_id)
-            myResponse.value = response
+            try {
+                moviePagingSource.collectLatest {
+                    myResponse.postValue(it)
+                }
+
+            } catch (e: Exception) {
+                Log.e("TAG", "fetchContents: ${e.message}")
+            }
         }
     }
 

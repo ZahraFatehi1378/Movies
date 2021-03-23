@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movie.MainActivity
@@ -20,6 +21,7 @@ import com.example.movie.ui.MovieDetailActivity
 import com.example.movie.ui.adaptor.MoviesAdaptor
 import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
 import com.example.movie.ui.interfaces.OnRecyclerItemListener
+import kotlinx.coroutines.launch
 
 
 open class BaseFragment : Fragment() {
@@ -29,6 +31,7 @@ open class BaseFragment : Fragment() {
     protected var moviesAdaptor: MoviesAdaptor? = null
     protected lateinit var rootView: View
     protected var recyclerList = mutableListOf<MovieModel>()
+    protected var page = 1
 
 
     override fun onCreateView(
@@ -43,26 +46,15 @@ open class BaseFragment : Fragment() {
     }
 
     private fun setSearch() {
-
         val mActivity = activity as MainActivity?
         mActivity?.setAboutDataListener(object : OnAboutDataReceivedListener {
             override fun onDataReceived(search: String) {
-                movieListViewModel.getSearchedMovies(
-                    Constant.API_KEY,
-                    search,
-                    "1"
-                )
-                movieListViewModel.myResponse.observe(viewLifecycleOwner, { response ->
-                    if (response.code() == 200) {
-
-                        recyclerList.clear()
-                        // if (ResultsLists.searchedMoviesPageNumber.toString() == "1") {
-                        recyclerList.addAll(response.body()?.movies!!)
-                        moviesAdaptor?.notifyDataSetChanged()
-//                        } else {
-//                            recyclerList.addAll(response.body()?.movies!!)
-//                        }
-                    } else println(response.errorBody().toString())
+                movieListViewModel.setSearchedMovies(search)
+                movieListViewModel.getMovies()
+                movieListViewModel.myResponse.observe(viewLifecycleOwner, {
+                    lifecycleScope.launch {
+                        moviesAdaptor?.submitData(it)
+                    }
                 })
 
             }
@@ -90,7 +82,7 @@ open class BaseFragment : Fragment() {
                 getSelectedMovie(position)
             }
 
-        }, recyclerList)
+        })
 
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = moviesAdaptor

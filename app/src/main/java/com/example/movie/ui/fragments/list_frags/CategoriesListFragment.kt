@@ -3,8 +3,10 @@ package com.example.movie.ui.fragments.list_frags
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.movie.MainActivity
 import com.example.movie.R
 import com.example.movie.request.Repository
 import com.example.movie.request.model.genre.GenreModel
@@ -12,8 +14,10 @@ import com.example.movie.request.util.Constant
 import com.example.movie.request.viewmodels.GenresViewModel
 import com.example.movie.request.viewmodels.factories.GenresViewModelFactory
 import com.example.movie.ui.adaptor.HorizontalGenresAdaptor
+import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
 import com.example.movie.ui.interfaces.OnHorizontalRecyclerListener
 import com.example.movie.ui.interfaces.OnRecyclerItemListener
+import kotlinx.coroutines.launch
 
 class CategoriesListFragment : BaseFragment() {
 
@@ -28,20 +32,27 @@ class CategoriesListFragment : BaseFragment() {
 
         horizontalGenresAdaptor = HorizontalGenresAdaptor(object : OnHorizontalRecyclerListener {
             override fun onItemClicked(position: Int, genre_id: Int) {
-                movieListViewModel.getMoviesOfTheGenre(Constant.API_KEY, genre_id)
-                movieListViewModel.myResponse.observe(viewLifecycleOwner, { response ->
-                    if (response.code() == 200) {
-                        recyclerList.clear()
-                        // if (ResultsLists.searchedMoviesPageNumber.toString() == "1") {
-                        recyclerList.addAll(response.body()?.movies!!)
-                        moviesAdaptor?.notifyDataSetChanged()
-                    } else println(response.errorBody().toString())
+
+                val mActivity = activity as MainActivity?
+                mActivity?.setAboutDataListener(object : OnAboutDataReceivedListener {
+                    override fun onDataReceived(search: String) {
+                        movieListViewModel.setMoviesByGenre(genre_id)
+                        movieListViewModel.getMovies()
+                        movieListViewModel.myResponse.observe(viewLifecycleOwner, {
+                            lifecycleScope.launch {
+                                moviesAdaptor?.submitData(it)
+                            }
+                        })
+
+                    }
+
                 })
             }
         }, genresList)
         horizontalRecyclerView = rootView.findViewById(R.id.horizontalRecyclerView)
 
-        horizontalRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        horizontalRecyclerView?.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         horizontalRecyclerView?.adapter = horizontalGenresAdaptor
 
     }
@@ -49,20 +60,25 @@ class CategoriesListFragment : BaseFragment() {
     override fun setMovies() {
         setCategorizedMovies()
 
-        movieListViewModel.getMoviesOfTheGenre(Constant.API_KEY,28 )
-        movieListViewModel.myResponse.observe(viewLifecycleOwner, { response ->
-            if (response.code() == 200) {
-                recyclerList.clear()
-                // if (ResultsLists.searchedMoviesPageNumber.toString() == "1") {
-                recyclerList.addAll(response.body()?.movies!!)
-                moviesAdaptor?.notifyDataSetChanged()
-            } else println(response.errorBody().toString())
+        val mActivity = activity as MainActivity?
+        mActivity?.setAboutDataListener(object : OnAboutDataReceivedListener {
+            override fun onDataReceived(search: String) {
+                movieListViewModel.setMoviesByGenre(28)
+                movieListViewModel.getMovies()
+                movieListViewModel.myResponse.observe(viewLifecycleOwner, {
+                    lifecycleScope.launch {
+                        moviesAdaptor?.submitData(it)
+                    }
+                })
+
+            }
         })
     }
 
     private fun setCategorizedMovies() {
         val genresViewModelFactory = GenresViewModelFactory(Repository)
-        genresViewModel = ViewModelProvider(this, genresViewModelFactory).get(GenresViewModel::class.java)
+        genresViewModel =
+            ViewModelProvider(this, genresViewModelFactory).get(GenresViewModel::class.java)
         genresViewModel.getGenres(Constant.API_KEY)
         genresViewModel.myResponse.observe(viewLifecycleOwner, { response ->
             if (response.code() == 200) {

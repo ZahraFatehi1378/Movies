@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movie.R
 import com.example.movie.databinding.MovieItemBinding
@@ -13,8 +15,8 @@ import com.example.movie.ui.interfaces.OnRecyclerItemListener
 
 class MoviesAdaptor(
     private val listener: OnRecyclerItemListener,
-    private var list: MutableList<MovieModel>
-) : RecyclerView.Adapter<MoviesAdaptor.MovieViewHandler>() {
+ //   private var list: MutableList<MovieModel>
+) : PagingDataAdapter<MovieModel , MoviesAdaptor.MovieViewHandler>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHandler {
         val binding: MovieItemBinding = DataBindingUtil.inflate(
@@ -27,12 +29,10 @@ class MoviesAdaptor(
     }
 
     override fun onBindViewHolder(holder: MovieViewHandler, position: Int) {
-        holder.bindItems(list[position])
+     //   holder.bindItems(list[position])
+        holder.bindItems(getItem(position)!!)
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
 
     inner class MovieViewHandler(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(
         binding.root
@@ -49,7 +49,16 @@ class MoviesAdaptor(
         }
 
     }
+    class DiffCallback : DiffUtil.ItemCallback<MovieModel>() {
+        override fun areItemsTheSame(oldItem: MovieModel, newItem: MovieModel): Boolean {
+            return oldItem.id == newItem.id
+        }
 
+        override fun areContentsTheSame(oldItem: MovieModel, newItem: MovieModel): Boolean {
+            return oldItem.equals(newItem)
+        }
+
+    }
 
 }
 

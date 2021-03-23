@@ -1,5 +1,6 @@
 package com.example.movie.request.util
 
+import com.example.movie.request.model.credits.CreditResponse
 import com.example.movie.request.model.moviedetail.MovieDetailModel
 import com.example.movie.request.model.genre.GenreResponse
 import com.example.movie.request.model.movie.MovieSearchResponse
@@ -25,7 +26,6 @@ interface MovieApi {
         @Query("page") page: String
     ): Response<MovieSearchResponse>
 
-
     //search with id
     @GET("/3/movie/{movie_id}?")
     suspend fun getMovieAccordingToId(
@@ -40,16 +40,16 @@ interface MovieApi {
     ): Response<GenreResponse>
 
     //credits
-    @GET("/3/movie/{movie_id}?/credits")
+    @GET("/3/movie/{movie_id}/credits")
     suspend fun getCredits(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") key: String
-    )
+    ): Response<CreditResponse>
 
     //movies according the genre
     @GET("/3/discover/movie")
     suspend fun getMoviesOfTheGenre(
         @Query("api_key") key: String,
-        @Query("with_genres") genre:Int
-    ):Response<MovieSearchResponse>
+        @Query("with_genres") genre: Int
+    ): Response<MovieSearchResponse>
 }
