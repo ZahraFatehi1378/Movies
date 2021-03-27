@@ -6,15 +6,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.movie.R
 import com.example.movie.databinding.ActivityMovieDetailBinding
-import com.example.movie.request.Repository
-import com.example.movie.request.model.credits.CastModel
-import com.example.movie.request.model.credits.CrewModel
-import com.example.movie.request.model.genre.GenreModel
-import com.example.movie.request.util.Constant
-import com.example.movie.request.viewmodels.CreditsViewModel
-import com.example.movie.request.viewmodels.MovieDetailViewModel
-import com.example.movie.request.viewmodels.factories.CreditsViewModelFactory
-import com.example.movie.request.viewmodels.factories.MovieDetailsViewModelFactory
+import com.example.movie.data.api.model.credits.CastModel
+import com.example.movie.data.api.model.credits.CrewModel
+import com.example.movie.data.api.model.genre.GenreModel
+import com.example.movie.data.api.util.Constant
+import com.example.movie.data.api.viewmodels.CreditsViewModel
+import com.example.movie.data.api.viewmodels.MovieDetailViewModel
+import com.example.movie.data.api.viewmodels.factories.CreditsViewModelFactory
+import com.example.movie.data.api.viewmodels.factories.MovieDetailsViewModelFactory
 import java.lang.StringBuilder
 
 class MovieDetailActivity : AppCompatActivity() {
@@ -30,8 +29,8 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun initialize() {
 
         val binding: ActivityMovieDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail)
-        val movieDetailViewModelFactory = MovieDetailsViewModelFactory(Repository)
-        val movieCreditsViewModelFactory = CreditsViewModelFactory(Repository)
+        val movieDetailViewModelFactory = MovieDetailsViewModelFactory()
+        val movieCreditsViewModelFactory = CreditsViewModelFactory()
 
         movieDetailViewModel = ViewModelProvider(this, movieDetailViewModelFactory).get(MovieDetailViewModel::class.java)
         movieCreditsViewModel = ViewModelProvider(this ,movieCreditsViewModelFactory ).get(CreditsViewModel::class.java)

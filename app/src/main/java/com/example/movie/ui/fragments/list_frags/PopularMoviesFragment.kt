@@ -1,7 +1,6 @@
 package com.example.movie.ui.fragments.list_frags
 
 import androidx.lifecycle.lifecycleScope
-import com.example.movie.request.util.Constant
 import kotlinx.coroutines.launch
 
 

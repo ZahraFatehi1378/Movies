@@ -4,7 +4,7 @@
     <data>
         <variable
             name="genreModel"
-            type="com.example.movie.request.model.genre.GenreModel" />
+            type="com.example.movie.data.api.model.genre.GenreModel" />
 
     </data>
 

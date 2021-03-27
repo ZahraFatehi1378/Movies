@@ -8,7 +8,7 @@
 
         <variable
             name="chosenMovie"
-            type="com.example.movie.request.model.moviedetail.MovieDetailModel" />
+            type="com.example.movie.data.api.model.moviedetail.MovieDetailModel" />
 
         <variable
             name="crews"

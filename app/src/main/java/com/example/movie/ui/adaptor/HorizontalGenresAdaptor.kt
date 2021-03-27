@@ -7,9 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movie.R
 import com.example.movie.databinding.CategoryItemBinding
-import com.example.movie.request.model.genre.GenreModel
+import com.example.movie.data.api.model.genre.GenreModel
 import com.example.movie.ui.interfaces.OnHorizontalRecyclerListener
-import com.example.movie.ui.interfaces.OnRecyclerItemListener
 
 class HorizontalGenresAdaptor(
     private val listener: OnHorizontalRecyclerListener,

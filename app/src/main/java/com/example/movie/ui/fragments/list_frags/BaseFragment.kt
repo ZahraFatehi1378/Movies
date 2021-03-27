@@ -12,11 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movie.MainActivity
 import com.example.movie.R
-import com.example.movie.request.Repository
-import com.example.movie.request.model.movie.MovieModel
-import com.example.movie.request.util.Constant
-import com.example.movie.request.viewmodels.MovieListViewModel
-import com.example.movie.request.viewmodels.factories.MovieListViewModelFactory
+import com.example.movie.data.api.model.movie.MovieModel
+import com.example.movie.data.api.viewmodels.MovieListViewModel
+import com.example.movie.data.api.viewmodels.factories.MovieListViewModelFactory
 import com.example.movie.ui.MovieDetailActivity
 import com.example.movie.ui.adaptor.MoviesAdaptor
 import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
@@ -30,8 +28,6 @@ open class BaseFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
     protected var moviesAdaptor: MoviesAdaptor? = null
     protected lateinit var rootView: View
-    protected var recyclerList = mutableListOf<MovieModel>()
-    protected var page = 1
 
 
     override fun onCreateView(
@@ -67,9 +63,8 @@ open class BaseFragment : Fragment() {
     }
 
     private fun init() {
-        val viewModelFactory = MovieListViewModelFactory(Repository)
-        movieListViewModel =
-            ViewModelProvider(this, viewModelFactory).get(MovieListViewModel::class.java)
+        val viewModelFactory = MovieListViewModelFactory()
+        movieListViewModel = ViewModelProvider(this, viewModelFactory).get(MovieListViewModel::class.java)
 
         addRecyclerView()
         setMovies()
@@ -78,8 +73,11 @@ open class BaseFragment : Fragment() {
 
     private fun addRecyclerView() {
         moviesAdaptor = MoviesAdaptor(object : OnRecyclerItemListener {
-            override fun onItemClicked(position: Int) {
-                getSelectedMovie(position)
+            override fun onItemClicked(item: MovieModel?) {
+                val intent = Intent(activity, MovieDetailActivity::class.java).apply {
+                    putExtra("movie_id", item?.id)
+                }
+                startActivity(intent)
             }
 
         })
@@ -94,20 +92,9 @@ open class BaseFragment : Fragment() {
                     setMovies()
             }
         })
-
     }
 
 
     open fun setMovies() {}
 
-
-    fun getSelectedMovie(position: Int) {
-        if (recyclerList.isNotEmpty()) {
-
-            val intent = Intent(activity, MovieDetailActivity::class.java).apply {
-                putExtra("movie_id", recyclerList[position].id)
-            }
-            startActivity(intent)
-        }
-    }
 }

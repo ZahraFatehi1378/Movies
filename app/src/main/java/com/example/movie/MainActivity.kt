@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.movie.request.viewmodels.MovieDetailViewModel
+import com.example.movie.data.api.viewmodels.MovieDetailViewModel
 import com.example.movie.ui.adaptor.PagerAdaptor
 import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
 import com.google.android.material.appbar.AppBarLayout
@@ -18,8 +18,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-
-    private lateinit var movieDetailModel: MovieDetailViewModel
 
     lateinit var viewPager: ViewPager2
     lateinit var searchText: EditText
