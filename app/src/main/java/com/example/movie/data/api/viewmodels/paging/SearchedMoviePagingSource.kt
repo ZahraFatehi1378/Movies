@@ -3,7 +3,7 @@ package com.example.movie.data.api.viewmodels.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.movie.data.api.model.movie.MovieModel
-import com.example.movie.data.api.request.Repositories.MovieListRepository
+import com.example.movie.data.api.request.repositories.MovieListRepository
 import retrofit2.HttpException
 import java.io.IOException
 

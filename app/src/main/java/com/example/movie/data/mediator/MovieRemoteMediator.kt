@@ -1,5 +1,6 @@
 package com.example.movie.data.mediator
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -9,53 +10,40 @@ import com.example.movie.data.api.model.movie.MovieModel
 import com.example.movie.data.api.util.Constant
 import com.example.movie.data.api.util.MovieApi
 import com.example.movie.data.database.DataBase
-import retrofit2.HttpException
-import java.io.IOException
 
 
 @OptIn(ExperimentalPagingApi::class)
-open class MovieRemoteMediator<T, U>(
-    private val movie_id: Int,
+open class MovieRemoteMediator(
     private val database: DataBase,
     private val movieApiService: MovieApi
 ) : RemoteMediator<Int, MovieModel>() {
     val dataBaseDao = database.dataBaseDao()
+    var key = 1
 
-    override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, MovieModel>
-    ): RemoteMediator.MediatorResult {
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, MovieModel>): MediatorResult {
+
+//        val page = when (loadType) {
+//            LoadType.REFRESH -> 1
+//            LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+//            LoadType.APPEND -> {
+//                val nextKey = state.pages.lastOrNull()?.nextKey
+//                nextKey ?: return MediatorResult.Success(endOfPaginationReached = true)
+//            }
+//        }
+
         return try {
-            val loadKey = when (loadType) {
-                LoadType.REFRESH -> null
-                LoadType.PREPEND ->
-                    return MediatorResult.Success(endOfPaginationReached = true)
-                LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
-                    if (lastItem == null) {
-                        return MediatorResult.Success(
-                            endOfPaginationReached = true
-                        )
-                    }
-                    lastItem.id
-                }
-            }
 
-
-            val response = movieApiService.getPopularMovies(Constant.API_KEY, loadKey.toString())
+            val response = movieApiService.getPopularMovies(Constant.API_KEY, page = key.toString())
             database.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    dataBaseDao.deleteMovieById(id = movie_id)
+                if (response.body() != null) {
+                    dataBaseDao.insertMovie(response.body()!!.movies)
+                    key++
                 }
-                dataBaseDao.insertMovie(response.body()!!.movies)
             }
-
-            MediatorResult.Success(endOfPaginationReached = loadKey == response.body()?.total_pages)
-        } catch (e: IOException) {
-            MediatorResult.Error(e)
-        } catch (e: HttpException) {
+            MediatorResult.Success(endOfPaginationReached = response.body()!!.movies.isEmpty())
+        } catch (e: Exception) {
+            e.printStackTrace()
             MediatorResult.Error(e)
         }
     }
-
 }

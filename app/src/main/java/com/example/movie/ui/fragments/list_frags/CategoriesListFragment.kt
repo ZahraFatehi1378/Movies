@@ -65,11 +65,9 @@ class CategoriesListFragment : BaseFragment() {
             ViewModelProvider(this, genresViewModelFactory).get(GenresViewModel::class.java)
         genresViewModel.getGenres(Constant.API_KEY)
         genresViewModel.myResponse.observe(viewLifecycleOwner, { response ->
-            if (response.code() == 200) {
-                genresList.addAll((response.body()?.genres as MutableList<GenreModel>?)!!)
+                genresList.addAll(response)
                 genresList.get(0).selected = true
                 horizontalGenresAdaptor.notifyDataSetChanged()
-            } else println(response.errorBody().toString())
         })
     }
 

@@ -4,40 +4,45 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.example.movie.data.api.model.movie.MovieModel
-import com.example.movie.data.api.request.Repositories.MovieListRepository
+import com.example.movie.data.api.request.repositories.MovieListRepository
 import com.example.movie.data.api.util.Constant
 import com.example.movie.data.api.viewmodels.paging.MoviesByGenrePagingSource
 import com.example.movie.data.api.viewmodels.paging.PopularMoviePagingSource
 import com.example.movie.data.api.viewmodels.paging.SearchedMoviePagingSource
+import com.example.movie.data.database.DataBase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MovieListViewModel : ViewModel() {
 
     val myResponse: MutableLiveData<PagingData<MovieModel>> = MutableLiveData()
     lateinit var moviePagingSource: Flow<PagingData<MovieModel>>
-    val repository =  MovieListRepository()
+    val repository = MovieListRepository()
+    val db = DataBase.getDatabase()
+    val dao = db.dataBaseDao()
 
-//    val pager = Pager(
-//        PagingConfig(pageSize = 50),
-//        MovieRemoteMediator(1,database , RetrofitInstance.api)
-//    )
-//    {
-//        database.dataBaseDao().movieById(1)
+
+//    @OptIn(ExperimentalPagingApi::class)
+//    fun fetchMovies():Flow<PagingData<MovieModel>>{
+//        return Pager(PagingConfig(pageSize = 20 , enablePlaceholders = false , initialLoadSize = 1 ) ,
+//            remoteMediator= MovieRemoteMediator(db , RetrofitInstance.api) ,
+//            pagingSourceFactory = {dao.pagingSource()}
+//        ).flow
 //    }
 
 
-    fun setPopularMovies() {
-        moviePagingSource = Pager(PagingConfig(pageSize = 20)) {
-            PopularMoviePagingSource(Constant.API_KEY, repository)
-        }.flow.cachedIn(viewModelScope)
+    fun getPopularMovies() {
+        viewModelScope.launch(Dispatchers.IO) {
+            Pager(PagingConfig(pageSize = 20)) {
+                PopularMoviePagingSource(Constant.API_KEY, repository)
+            }.flow.cachedIn(viewModelScope).collectLatest {
+                Log.e(")))))))))))))))))))))))" , "${it}")
+                myResponse.postValue(it) }
+        }
     }
 
     fun setSearchedMovies(query: String) {
@@ -55,14 +60,9 @@ class MovieListViewModel : ViewModel() {
 
 
     fun getMovies() {
-        viewModelScope.launch {
-            try {
-                moviePagingSource.collectLatest {
-                    myResponse.postValue(it)
-                }
-
-            } catch (e: Exception) {
-                Log.e("TAG", "fetchContents: ${e.message}")
+        viewModelScope.launch(Dispatchers.IO) {
+            moviePagingSource.collectLatest {
+                myResponse.postValue(it)
             }
         }
     }

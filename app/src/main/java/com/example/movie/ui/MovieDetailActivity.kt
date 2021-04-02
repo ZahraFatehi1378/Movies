@@ -28,12 +28,17 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun initialize() {
 
-        val binding: ActivityMovieDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail)
+        val binding: ActivityMovieDetailBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_movie_detail)
         val movieDetailViewModelFactory = MovieDetailsViewModelFactory()
         val movieCreditsViewModelFactory = CreditsViewModelFactory()
 
-        movieDetailViewModel = ViewModelProvider(this, movieDetailViewModelFactory).get(MovieDetailViewModel::class.java)
-        movieCreditsViewModel = ViewModelProvider(this ,movieCreditsViewModelFactory ).get(CreditsViewModel::class.java)
+        movieDetailViewModel = ViewModelProvider(
+            this,
+            movieDetailViewModelFactory
+        ).get(MovieDetailViewModel::class.java)
+        movieCreditsViewModel =
+            ViewModelProvider(this, movieCreditsViewModelFactory).get(CreditsViewModel::class.java)
 
         getMovieDetail(binding)
     }
@@ -41,30 +46,26 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun getMovieDetail(binding: ActivityMovieDetailBinding) {
         movieDetailViewModel.getMovieDetails(Constant.API_KEY, intent.getIntExtra("movie_id", 0))
         movieDetailViewModel.myResponse.observe(this, { response ->
-            if (response.code() == 200) {
-                binding.chosenMovie = response.body()
-                binding.genresList = setList(response.body()?.genres!!)
-                getCredits(binding , response.body()!!.id)
-            } else println(response.errorBody().toString())
+            binding.chosenMovie = response
+            binding.genresList = setList(response.genres!!)
+            getCredits(binding, response!!.id)
         })
     }
 
     private fun getCredits(binding: ActivityMovieDetailBinding, id: Int) {
-        movieCreditsViewModel.getCredits(Constant.API_KEY , id)
+        movieCreditsViewModel.getCredits(Constant.API_KEY, id)
         println(id)
         movieCreditsViewModel.myResponse.observe(this, { response ->
-            if (response.code() == 200) {
-                binding.crews = setCrews(response.body()?.crew)
-                binding.casts = setCasts(response.body()?.cast)
+            binding.crews = setCrews(response.crew)
+            binding.casts = setCasts(response.cast)
 
-            }
         })
     }
 
     private fun setCrews(crews: List<CrewModel>?): String? {
         val result = StringBuilder()
         if (crews != null) {
-            for (crew :CrewModel in crews){
+            for (crew: CrewModel in crews) {
                 result.append("name : ${crew.name} \n")
                 result.append("job : ${crew.job} \n")
             }
@@ -75,7 +76,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun setCasts(casts: List<CastModel>?): String? {
         val result = StringBuilder()
         if (casts != null) {
-            for (cast :CastModel in casts){
+            for (cast: CastModel in casts) {
                 result.append("name : ${cast.name} \n")
                 result.append("character : ${cast.character} \n")
             }

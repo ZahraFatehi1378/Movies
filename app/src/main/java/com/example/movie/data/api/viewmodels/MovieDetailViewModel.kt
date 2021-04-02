@@ -4,19 +4,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movie.data.api.model.moviedetail.MovieDetailModel
-import com.example.movie.data.api.request.Repositories.MovieDetailRepository
+import com.example.movie.data.api.request.repositories.MovieDetailRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class MovieDetailViewModel : ViewModel() {
 
-    val myResponse: MutableLiveData<Response<MovieDetailModel>> = MutableLiveData()
-    val repository= MovieDetailRepository()
+    val myResponse: MutableLiveData<MovieDetailModel> = MutableLiveData()
+    private val repository= MovieDetailRepository()
 
     fun getMovieDetails(key: String,id:Int){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = repository.getMovieAccordingToId(id , key)
-            myResponse.value = response
+            myResponse.postValue(response)
         }
     }
 }

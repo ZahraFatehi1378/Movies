@@ -1,5 +1,6 @@
 package com.example.movie.ui.fragments.list_frags
 
+import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
@@ -12,13 +13,20 @@ class PopularMoviesFragment : BaseFragment() {
     }
 
     private fun setPopularMovies() {
-        movieListViewModel.setPopularMovies()
-        movieListViewModel.getMovies()
+        movieListViewModel.getPopularMovies()
+    //    movieListViewModel.getMovies()
+
         movieListViewModel.myResponse.observe(viewLifecycleOwner, {
             lifecycleScope.launch {
+                Log.e("*******" , "${it}")
                 moviesAdaptor?.submitData(it)
             }
         })
+//        lifecycleScope.launch {
+//            movieListViewModel.fetchMovies().collectLatest {
+//                moviesAdaptor?.submitData(it)
+//            }
+//        }
     }
 
 
