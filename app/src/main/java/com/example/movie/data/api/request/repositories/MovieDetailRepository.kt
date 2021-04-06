@@ -1,5 +1,6 @@
 package com.example.movie.data.api.request.repositories
 
+import com.example.movie.App
 import com.example.movie.data.api.model.moviedetail.MovieDetailModel
 import com.example.movie.data.api.request.RetrofitInstance
 import com.example.movie.data.database.DataBase
@@ -13,13 +14,15 @@ class MovieDetailRepository {
     private lateinit var movieDetail: Response<MovieDetailModel>
 
     suspend fun getMovieAccordingToId(movie_id: Int, key: String): MovieDetailModel {
-        result = dbDao.getMovieDetail(movie_id)
-        if (result == null) {
+        if (App.isNetworkAvailable()) {
             movieDetail = api.getMovieAccordingToId(movie_id, key)
             if (movieDetail.code() == 200) {
                 result = movieDetail.body()
                 dbDao.insertMovieDetail(result!!)
-            } else println(movieDetail.errorBody().toString())
+            } else result = dbDao.getMovieDetail(movie_id)
+        }else result = dbDao.getMovieDetail(movie_id)
+        if (result == null){
+            result = MovieDetailModel(-1 , "" , "" ,  "" ,"" , "","" , listOf() , 0f ,0f,"")
         }
         return result as MovieDetailModel
     }

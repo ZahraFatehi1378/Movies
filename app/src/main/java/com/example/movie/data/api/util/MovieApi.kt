@@ -50,6 +50,7 @@ interface MovieApi {
     @GET("/3/discover/movie")
     suspend fun getMoviesOfTheGenre(
         @Query("api_key") key: String,
-        @Query("with_genres") genre: Int
+        @Query("with_genres") genre: Int,
+        @Query("page") page: String
     ): Response<MovieSearchResponse>
 }

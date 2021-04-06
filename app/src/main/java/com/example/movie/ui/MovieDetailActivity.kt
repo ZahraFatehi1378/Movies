@@ -46,9 +46,13 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun getMovieDetail(binding: ActivityMovieDetailBinding) {
         movieDetailViewModel.getMovieDetails(Constant.API_KEY, intent.getIntExtra("movie_id", 0))
         movieDetailViewModel.myResponse.observe(this, { response ->
-            binding.chosenMovie = response
-            binding.genresList = setList(response.genres!!)
-            getCredits(binding, response!!.id)
+            if (response.id == -1){
+                //todo
+            }else {
+                binding.chosenMovie = response
+                binding.genresList = setList(response.genres!!)
+                getCredits(binding, response!!.id)
+            }
         })
     }
 

@@ -1,5 +1,6 @@
 package com.example.movie.data.api.request.repositories
 
+import com.example.movie.App
 import com.example.movie.data.api.model.credits.CastModel
 import com.example.movie.data.api.model.credits.CreditResponse
 import com.example.movie.data.api.model.credits.CrewModel
@@ -16,23 +17,22 @@ class CreditsRepository {
     private lateinit var credits: Response<CreditResponse>
 
     suspend fun getCredits(key: String , movie_id:Int): CreditResponse {
-        result = CreditResponse(dbDao.getCasts(movie_id) , dbDao.getCrews(movie_id))
-        if (result.cast.isEmpty() || result.crew.isEmpty()) {
+
+        if (App.isNetworkAvailable()) {
             credits = api.getCredits(movie_id, key)
             if (credits.code() == 200) {
                 val casts = credits.body()!!.cast
                 val crews = credits.body()!!.crew
                 result = CreditResponse(casts, crews)
-                for (crew : CrewModel in crews){
+                for (crew: CrewModel in crews) {
                     dbDao.insertCrew(crew)
                 }
-                for (cast : CastModel in casts){
+                for (cast: CastModel in casts) {
                     dbDao.insertCast(cast)
                 }
-            } else {
-                println(credits.errorBody().toString())
-            }
-        }
+            } else result = CreditResponse(dbDao.getCasts(movie_id), dbDao.getCrews(movie_id))
+        }else  result = CreditResponse(dbDao.getCasts(movie_id) , dbDao.getCrews(movie_id))
+
         return result
     }
 }

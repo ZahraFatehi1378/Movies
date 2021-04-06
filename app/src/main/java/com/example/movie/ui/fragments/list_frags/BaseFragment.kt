@@ -1,5 +1,6 @@
 package com.example.movie.ui.fragments.list_frags
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.movie.App
 import com.example.movie.MainActivity
 import com.example.movie.R
 import com.example.movie.data.api.model.movie.MovieModel

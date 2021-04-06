@@ -1,6 +1,7 @@
 package com.example.movie.data.api.request.repositories
 
 import android.util.Log
+import com.example.movie.App
 import com.example.movie.data.api.model.movie.MovieModel
 import com.example.movie.data.api.model.movie.MovieSearchResponse
 import com.example.movie.data.api.request.RetrofitInstance
@@ -15,44 +16,27 @@ class MovieListRepository {
     private lateinit var moviesList: Response<MovieSearchResponse>
 
     suspend fun getPopularMovies(key: String, page: String): List<MovieModel>? {
- //       CoroutineScope(context = Dispatchers.IO).launch {
- //           val avar = async {
-  //             val awar =async {
-                   result = dbDao.getAllMovies()
-                   Log.e("----11111111111", "$result")
 
-//               }
-//            awar.await()
-                Log.e("00000000000", "$result")
-   //         return@launch
+        if (App.isNetworkAvailable()) {
+            moviesList = api.getPopularMovies(key, page)
+            if (moviesList.code() == 200) {
+                result = moviesList.body()?.movies
+                dbDao.insertMovie(result!!)
+            } else result = dbDao.getAllMovies()
+        } else result = dbDao.getAllMovies()
 
-            if (result == null) {
-                moviesList = api.getPopularMovies(key, page)
-                if (moviesList.code() == 200) {
-                    result = moviesList.body()?.movies
-                    dbDao.insertMovie(result!!)
-                } else {
-                    println(moviesList.errorBody().toString())
-                    result = dbDao.getAllMovies()
-                }
-            }
-//            }
-//            avar.await()
-  //      }
-        Log.e("1111111111" , "$result")
+        Log.e("reeeeeeeeesult" , "$result")
         return result
     }
 
-    suspend fun getSearchedMovies(
-        key: String,
-        query: String,
-        page: String
-    ): Response<MovieSearchResponse> {
+    //no need to be saved in db
+    suspend fun getSearchedMovies(key: String, query: String, page: String): Response<MovieSearchResponse> {
         return RetrofitInstance.api.getSearchedMovies(key, query, page)
     }
 
-    suspend fun getMoviesOfTheGenre(key: String, genre_id: Int): Response<MovieSearchResponse> {
-        return RetrofitInstance.api.getMoviesOfTheGenre(key, genre_id)
+    //no need to be saved in db
+    suspend fun getMoviesOfTheGenre(key: String, genre_id: Int , page:String): Response<MovieSearchResponse> {
+        return RetrofitInstance.api.getMoviesOfTheGenre(key, genre_id , page)
     }
 
 }

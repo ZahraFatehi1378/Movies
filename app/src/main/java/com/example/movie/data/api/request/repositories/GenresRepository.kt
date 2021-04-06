@@ -1,5 +1,6 @@
 package com.example.movie.data.api.request.repositories
 
+import com.example.movie.App.Companion.isNetworkAvailable
 import com.example.movie.data.api.model.genre.GenreModel
 import com.example.movie.data.api.model.genre.GenreResponse
 import com.example.movie.data.api.request.RetrofitInstance
@@ -13,17 +14,16 @@ class GenresRepository {
     private lateinit var genres: Response<GenreResponse>
 
     suspend fun getGenres(key: String): List<GenreModel> {
-        result = dbDao.getGenres()
-        if (result.size == 0) {
+
+        if (isNetworkAvailable()) {
             genres = api.getGenres(key)
             if (genres.code() == 200) {
                 result = genres.body()?.genres as MutableList<GenreModel>
-                for (genre:GenreModel in result)
+                for (genre: GenreModel in result)
                     dbDao.insertGenre(genre)
-            } else {
-                println(genres.errorBody().toString())
-            }
-        }
+            } else result = dbDao.getGenres()
+        } else result = dbDao.getGenres()
+
         return result
     }
 }

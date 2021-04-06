@@ -14,7 +14,6 @@ class PopularMoviesFragment : BaseFragment() {
 
     private fun setPopularMovies() {
         movieListViewModel.getPopularMovies()
-    //    movieListViewModel.getMovies()
 
         movieListViewModel.myResponse.observe(viewLifecycleOwner, {
             lifecycleScope.launch {
@@ -22,11 +21,6 @@ class PopularMoviesFragment : BaseFragment() {
                 moviesAdaptor?.submitData(it)
             }
         })
-//        lifecycleScope.launch {
-//            movieListViewModel.fetchMovies().collectLatest {
-//                moviesAdaptor?.submitData(it)
-//            }
-//        }
     }
 
 

@@ -9,17 +9,15 @@ import java.io.IOException
 
 class MoviesByGenrePagingSource(
     var key: String,
-    var genre_id:Int, var repository: MovieListRepository
+    var genre_id: Int, var repository: MovieListRepository
 ) : PagingSource<Int, MovieModel>() {
-    override fun getRefreshKey(state: PagingState<Int, MovieModel>): Int? {
-        return state.anchorPosition
-    }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieModel> {
         //for first case it will be null, then we can pass some default value, in our case it's 1
         val page = params.key ?: 1
         return try {
-            val response = repository.getMoviesOfTheGenre( key , genre_id).body()!!.movies
+            val response =
+                repository.getMoviesOfTheGenre(key, genre_id, page.toString()).body()!!.movies
             LoadResult.Page(
                 response, prevKey = if (page == 1) null else page - 1,
                 nextKey = if (response.isEmpty()) null else page + 1
@@ -29,6 +27,10 @@ class MoviesByGenrePagingSource(
         } catch (exception: HttpException) {
             return LoadResult.Error(exception)
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, MovieModel>): Int? {
+        return state.anchorPosition
     }
 
 }
