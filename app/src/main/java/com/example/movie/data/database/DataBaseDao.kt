@@ -1,6 +1,5 @@
 package com.example.movie.data.database
 
-import androidx.paging.PagingSource
 import androidx.room.*
 import com.example.movie.data.api.model.credits.CastModel
 import com.example.movie.data.api.model.credits.CrewModel
@@ -26,7 +25,6 @@ interface DataBaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCast(genreModel: CastModel)
 
-
     @Query("select * from movie")
     suspend fun getAllMovies():List< MovieModel>
 
@@ -36,14 +34,13 @@ interface DataBaseDao {
     @Query("select* from genre")
     suspend fun getGenres():MutableList<GenreModel>
 
-    @Query("select * from movie limit :start , :end")
-    suspend fun getLimitMovies(start: Int, end: Int):List<MovieModel>
-
     @Query("select * from crews where movie_id =:movie_id")
     suspend fun getCrews(movie_id:Int): List<CrewModel>
 
     @Query("select * from casts where movie_id =:movie_id")
     suspend fun getCasts(movie_id:Int): List<CastModel>
 
+    @Query("select * from movie natural join movie_detail where isSaved = 1")
+    suspend fun getSavedMovies():List< MovieModel>
 
 }

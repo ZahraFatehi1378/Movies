@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 class MovieListViewModel : ViewModel() {
 
     val myResponse: MutableLiveData<PagingData<MovieModel>> = MutableLiveData()
-    lateinit var moviePagingSource: Flow<PagingData<MovieModel>>
+    val mySavedMoviesResponse :MutableLiveData<List<MovieModel>> = MutableLiveData()
+    private lateinit var moviePagingSource: Flow<PagingData<MovieModel>>
     private val repository = MovieListRepository()
 
 
@@ -27,7 +28,8 @@ class MovieListViewModel : ViewModel() {
             Pager(PagingConfig(pageSize = 20)) {
                 PopularMoviePagingSource(Constant.API_KEY, repository)
             }.flow.cachedIn(viewModelScope).collectLatest {
-                myResponse.postValue(it) }
+                myResponse.postValue(it)
+            }
         }
     }
 
@@ -50,6 +52,12 @@ class MovieListViewModel : ViewModel() {
             moviePagingSource.collectLatest {
                 myResponse.postValue(it)
             }
+        }
+    }
+
+    fun getSavedMovies(){
+        viewModelScope.launch(Dispatchers.IO) {
+            mySavedMoviesResponse.postValue(repository.getSavedMovies())
         }
     }
 

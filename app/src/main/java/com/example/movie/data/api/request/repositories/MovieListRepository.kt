@@ -24,8 +24,6 @@ class MovieListRepository {
                 dbDao.insertMovie(result!!)
             } else result = dbDao.getAllMovies()
         } else result = dbDao.getAllMovies()
-
-        Log.e("reeeeeeeeesult" , "$result")
         return result
     }
 
@@ -37,6 +35,11 @@ class MovieListRepository {
     //no need to be saved in db
     suspend fun getMoviesOfTheGenre(key: String, genre_id: Int , page:String): Response<MovieSearchResponse> {
         return RetrofitInstance.api.getMoviesOfTheGenre(key, genre_id , page)
+    }
+
+    suspend fun getSavedMovies(): List<MovieModel> {
+        Log.e("${dbDao.getSavedMovies().size}" , "###############33")
+        return dbDao.getSavedMovies()
     }
 
 }

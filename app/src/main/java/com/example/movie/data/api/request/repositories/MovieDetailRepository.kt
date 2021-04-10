@@ -18,6 +18,10 @@ class MovieDetailRepository {
             movieDetail = api.getMovieAccordingToId(movie_id, key)
             if (movieDetail.code() == 200) {
                 result = movieDetail.body()
+                var x = dbDao.getMovieDetail(result!!.id)
+                if (x != null)
+                if ( x.isSaved)
+                    result!!.isSaved = true
                 dbDao.insertMovieDetail(result!!)
             } else result = dbDao.getMovieDetail(movie_id)
         }else result = dbDao.getMovieDetail(movie_id)

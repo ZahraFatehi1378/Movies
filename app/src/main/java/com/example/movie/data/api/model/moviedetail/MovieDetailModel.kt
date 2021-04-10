@@ -33,8 +33,9 @@ class MovieDetailModel(
     @ColumnInfo(name = "vote_average")
     val vote_average: Float,
     @ColumnInfo(name = "tagline")
-    val tagline: String
-
+    val tagline: String,
+    @ColumnInfo(name = "isSaved")
+    var isSaved:Boolean = false
 ) {
 
     //for dataBinding in glide
