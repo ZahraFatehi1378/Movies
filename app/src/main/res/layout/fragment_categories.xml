@@ -13,6 +13,14 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/bg_item"/>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/animation"
+        app:lottie_loop="true"
+        app:lottie_fileName="animation.json"
+        app:lottie_autoPlay="true" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

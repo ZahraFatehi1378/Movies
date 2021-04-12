@@ -3,8 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.list_frags.PopularMoviesFragment"
     android:background="@color/more_dark_blue">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/animation"
+            app:lottie_loop="true"
+            app:lottie_fileName="animation.json"
+            app:lottie_autoPlay="true" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

@@ -25,6 +25,7 @@ class CategoriesListFragment : BaseFragment() {
 
     override fun setRoot(inflater: LayoutInflater, container: ViewGroup?) {
         rootView = inflater.inflate(R.layout.fragment_categories, container, false)
+        noInternetAnim = rootView.findViewById(R.id.animation)
 
         horizontalGenresAdaptor = HorizontalGenresAdaptor(object : OnHorizontalRecyclerListener {
             override fun onItemClicked(position: Int, genre_id: Int) {
@@ -66,7 +67,8 @@ class CategoriesListFragment : BaseFragment() {
         genresViewModel.getGenres(Constant.API_KEY)
         genresViewModel.myResponse.observe(viewLifecycleOwner, { response ->
                 genresList.addAll(response)
-                genresList.get(0).selected = true
+            if (!genresList.isEmpty())
+                genresList[0].selected = true
                 horizontalGenresAdaptor.notifyDataSetChanged()
         })
     }

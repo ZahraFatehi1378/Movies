@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.movie.data.api.viewmodels.MovieDetailViewModel
 import com.example.movie.ui.adaptor.PagerAdaptor
 import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
 import com.google.android.material.appbar.AppBarLayout
@@ -21,9 +20,9 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var viewPager: ViewPager2
     lateinit var searchText: EditText
-    lateinit var imageView: ImageView
+    lateinit var searchImageView: ImageView
     lateinit var appBarLayout: AppBarLayout
-    lateinit var searchListener : OnAboutDataReceivedListener
+    lateinit var searchListener: OnAboutDataReceivedListener
 
 
     @SuppressLint("ResourceAsColor")
@@ -32,16 +31,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
-        imageView = findViewById(R.id.search)
+        searchImageView = findViewById(R.id.search)
         searchText = findViewById(R.id.search_txt)
         searchText.visibility = View.INVISIBLE
-      //  textView.isEnabled = false
         appBarLayout = findViewById(R.id.appBarLayout2)
 
-        imageView.setOnClickListener{
+        searchImageView.setOnClickListener {
             searchText.visibility = View.VISIBLE
             searchText.isEnabled = true
-        //    textView.setBackgroundColor(R.color.text_color)
 
             appBarLayout.visibility = View.INVISIBLE
             appBarLayout.isEnabled = false
@@ -51,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = PagerAdaptor(supportFragmentManager, lifecycle)
 
 
-        searchText.addTextChangedListener(object: TextWatcher {
+        searchText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
                 searchListener.onDataReceived(s.toString())
@@ -65,7 +62,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        TabLayoutMediator(tabs, viewPager
+        TabLayoutMediator(
+            tabs, viewPager
         ) { tab, position ->
             when (position) {
                 0 -> {

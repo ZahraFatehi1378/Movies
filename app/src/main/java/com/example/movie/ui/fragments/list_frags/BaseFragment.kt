@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.movie.MainActivity
 import com.example.movie.R
 import com.example.movie.data.api.model.movie.MovieModel
@@ -28,6 +30,7 @@ open class BaseFragment : Fragment() {
     protected var recyclerView: RecyclerView? = null
     protected var moviesAdaptor: MoviesAdaptor? = null
     protected lateinit var rootView: View
+    protected lateinit var noInternetAnim: LottieAnimationView
 
 
     override fun onCreateView(
@@ -37,11 +40,12 @@ open class BaseFragment : Fragment() {
         setRoot(inflater, container)
         recyclerView = rootView.findViewById(R.id.recyclerView)
         init()
-        setSearch()
         return rootView
     }
 
-    protected open fun setSearch() {
+    private fun setSearch() {
+        (activity as MainActivity).searchImageView.visibility = View.VISIBLE
+        (activity as MainActivity).searchImageView.isEnabled = true
         val mActivity = activity as MainActivity?
         mActivity?.setAboutDataListener(object : OnAboutDataReceivedListener {
             override fun onDataReceived(search: String) {
@@ -52,22 +56,31 @@ open class BaseFragment : Fragment() {
                         moviesAdaptor?.submitData(it)
                     }
                 })
-
             }
-
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).searchImageView.visibility = View.VISIBLE
+        (activity as MainActivity).searchImageView.isEnabled = true
+        setMovies()
     }
 
     protected open fun setRoot(inflater: LayoutInflater, container: ViewGroup?) {
         rootView = inflater.inflate(R.layout.fragment_base, container, false)
+        noInternetAnim = rootView.findViewById(R.id.animation)
+
     }
 
-    fun init() {
+    private fun init() {
         val viewModelFactory = MovieListViewModelFactory()
-        movieListViewModel = ViewModelProvider(this, viewModelFactory).get(MovieListViewModel::class.java)
+        movieListViewModel =
+            ViewModelProvider(this, viewModelFactory).get(MovieListViewModel::class.java)
 
         addRecyclerView()
         setMovies()
+        setSearch()
 
     }
 
@@ -82,6 +95,10 @@ open class BaseFragment : Fragment() {
 
         })
 
+        moviesAdaptor?.addLoadStateListener {
+            val isEmptyList = it.refresh is LoadState.NotLoading && moviesAdaptor!!.itemCount == 0
+            setUi(isEmptyList)
+        }
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = moviesAdaptor
 
@@ -92,6 +109,14 @@ open class BaseFragment : Fragment() {
                     setMovies()
             }
         })
+    }
+
+     protected open fun setUi(emptyList: Boolean) {
+        if (emptyList) {
+            noInternetAnim.visibility = View.VISIBLE
+        } else {
+            noInternetAnim.visibility = View.GONE
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.movie.data.api.viewmodels.paging
 
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.movie.data.api.model.movie.MovieModel
@@ -13,6 +14,7 @@ class PopularMoviePagingSource(var key: String, var repository: MovieListReposit
         val page = params.key ?: 1
         return try {
             val response: List<MovieModel> = repository.getPopularMovies(key, page.toString())!!
+           // isMoviesArrayEmpty.postValue(response.isEmpty())
             LoadResult.Page(
                 response, prevKey = if (page == 1) null else page - 1,
                 nextKey = if (response.isEmpty()) null else page + 1
