@@ -121,9 +121,15 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private fun setList(body: List<GenreModel>): String {
         val result = StringBuilder()
+
+        if (body.isNotEmpty())
         for (genre: GenreModel in body) {
             result.append("- ${genre.name}")
         }
+        else{
+            result.append("--")
+        }
+
         return result.substring(1).toString()
     }
 

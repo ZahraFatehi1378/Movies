@@ -2,6 +2,7 @@ package com.example.movie.ui.fragments.list_frags
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.example.movie.data.api.viewmodels.factories.MovieListViewModelFactory
 import com.example.movie.ui.MovieDetailActivity
 import com.example.movie.ui.adaptor.MoviesAdaptor
 import com.example.movie.ui.interfaces.OnAboutDataReceivedListener
+import com.example.movie.ui.interfaces.OnBackPressedListener
 import com.example.movie.ui.interfaces.OnRecyclerItemListener
 import kotlinx.coroutines.launch
 
@@ -56,6 +58,12 @@ open class BaseFragment : Fragment() {
                         moviesAdaptor?.submitData(it)
                     }
                 })
+            }
+        })
+
+        mActivity?.setBackPressesListener(object :OnBackPressedListener{
+            override fun backPressed() {
+             setMovies()
             }
         })
     }

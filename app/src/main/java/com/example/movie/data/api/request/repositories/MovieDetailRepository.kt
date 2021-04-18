@@ -22,6 +22,9 @@ class MovieDetailRepository {
                 if (x != null)
                 if ( x.isSaved)
                     result!!.isSaved = true
+                if (result!!.backdrop_path == null){
+                    result!!.backdrop_path = "";
+                }
                 dbDao.insertMovieDetail(result!!)
             } else result = dbDao.getMovieDetail(movie_id)
         }else result = dbDao.getMovieDetail(movie_id)

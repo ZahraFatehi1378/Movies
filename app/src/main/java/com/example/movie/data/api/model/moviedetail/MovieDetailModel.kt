@@ -15,7 +15,7 @@ class MovieDetailModel(
     @PrimaryKey
     val id: Int,
     @ColumnInfo(name = "backdrop_path")
-    val backdrop_path: String,
+    var backdrop_path: String,
     @ColumnInfo(name = "original_language")
     val original_language: String,
     @ColumnInfo(name = "original_title")
